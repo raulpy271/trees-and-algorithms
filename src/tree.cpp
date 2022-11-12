@@ -44,3 +44,23 @@ template <typename T> void print_leaf(Tree<T>* t) {
     else
         std::cout << "end" << std::endl;
 }
+
+template <typename T> std::string tree_repr(Tree<T>* t, int current_depth) {
+    std::string repr = "";
+    for (int i = current_depth; i > 0; i--) {
+        repr += "   ";
+    }
+    if (current_depth % 2 == 0) {
+        repr += "* ";
+    } else {
+        repr += "+ ";
+    }
+    if (t != nullptr) {
+        repr += std::to_string(t->info) + "\n";
+        repr += tree_repr(t->left, current_depth + 1);
+        repr += tree_repr(t->right, current_depth + 1);
+    } else {
+        repr += "null\n";
+    }
+    return repr;
+}

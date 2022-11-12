@@ -1,4 +1,4 @@
-src = src/tree.cpp src/main.cpp
+src = src/tree.* src/main.*
 obj = build/tree.o build/main.o
 
 $(obj): $(src)

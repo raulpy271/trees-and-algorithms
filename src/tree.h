@@ -24,4 +24,6 @@ private:
 
 template <typename T> void print_leaf(Tree<T>* t);
 
+template <typename T> std::string tree_repr(Tree<T>* t, int current_depth = 0);
+
 #endif // TREE_H_
