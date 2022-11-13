@@ -22,8 +22,9 @@ template <typename T> void AscedingPQueue<T>::delete_queue() {
 template <typename T> void pq_insert(AscedingPQueue<T>** pqueue, T value, int priority) {
     AscedingPQueue<T>* pqueue_to_insert = new AscedingPQueue<T>(value, priority);
     AscedingPQueue<T>* current_node = *pqueue;
-    if (priority <= current_node->priority) {
+    if (current_node == nullptr || priority <= current_node->priority) {
         // Should insert before first element
+        // Or should create first element of a empty queue
         pqueue_to_insert->next = current_node;
         *pqueue = pqueue_to_insert;
     }
