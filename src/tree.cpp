@@ -33,18 +33,21 @@ template <typename T> void Tree<T>::set_right(Tree<T>* right) {
     }
 }
 
-template <typename T> void Tree<T>::iterate(std::function<void(Tree<T>*)> func) {
-    iterate_recursive(func, this);
+template <typename T> void Tree<T>::iterate(std::function<void(Tree<T>*, int)> func) {
+    int index = 0;
+    iterate_recursive(func, this, &index);
 }
 
 template <typename T> void Tree<T>::iterate_recursive(
-        std::function<void(Tree<T>*)> func,
-        Tree<T>* subtree) {
+        std::function<void(Tree<T>*, int)> func,
+        Tree<T>* subtree,
+        int* index) {
     if (subtree->left != nullptr)
-        iterate_recursive(func, subtree->left);
-    func(subtree);
+        iterate_recursive(func, subtree->left, index);
+    func(subtree, *index);
+    *index = (*index) + 1;
     if (subtree->right != nullptr)
-        iterate_recursive(func, subtree->right);
+        iterate_recursive(func, subtree->right, index);
 }
 
 template <typename T> void print_leaf(Tree<T>* t) {

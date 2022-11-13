@@ -16,11 +16,11 @@ public:
 
     void set_left(Tree<T>* left);
     void set_right(Tree<T>* left);
-    void iterate(std::function<void(Tree<T>*)> func);
+    void iterate(std::function<void(Tree<T>*, int)> func);
     void delete_tree();
 
 private:
-    void iterate_recursive(std::function<void(Tree<T>*)> func, Tree<T>* subtree);
+    void iterate_recursive(std::function<void(Tree<T>*, int)> func, Tree<T>* subtree, int* index);
 };
 
 template <typename T> void print_leaf(Tree<T>* t);
