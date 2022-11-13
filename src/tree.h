@@ -31,4 +31,6 @@ template <typename T> void insert_in_frequency_tree(Tree<Freq<T>>* tree, T value
 
 template <typename T> Tree<Freq<T>>* create_frequency_tree(T* arr, size_t size);
 
+template <typename T> void set_values_and_frequencies(Tree<Freq<T>> tree, T* values, int* frequencies);
+
 #endif // TREE_H_

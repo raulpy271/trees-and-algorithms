@@ -115,6 +115,15 @@ template <typename T> Tree<Freq<T>>* create_frequency_tree(T* arr, size_t size) 
     return root;
 }
 
+template <typename T> void set_values_and_frequencies(
+        Tree<Freq<T>> tree,
+        T* values,
+        int* frequencies) {
+    tree.iterate([=] (Tree<Freq<T>>* node, int index) {
+        values[index] = node->info.value;
+        frequencies[index] = node->info.freq;
+    });
+}
 
 // When using template classes/function with implementation separated from header file 
 // is needed to explicitly instantiate the template.
@@ -123,3 +132,4 @@ template class Tree<Freq<char>>;
 template std::string tree_repr<Freq<char>> (Tree<Freq<char>>*, std::function<std::string(Freq<char>)>, int);
 template void insert_in_frequency_tree<char> (Tree<Freq<char>>*, char);
 template Tree<Freq<char>>* create_frequency_tree<char> (char*, size_t);
+template void set_values_and_frequencies<char> (Tree<Freq<char>>, char*, int*);
