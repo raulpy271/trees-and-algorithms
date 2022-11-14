@@ -9,6 +9,7 @@ public:
 
     Freq();
     Freq(T value);
+    Freq(T value, int freq);
 
     void inc();
 };

@@ -50,6 +50,12 @@ template <typename T> void Tree<T>::iterate_recursive(
         iterate_recursive(func, subtree->right, index);
 }
 
+template <typename T> size_t Tree<T>::count_nodes() {
+    size_t count = 0;
+    this->iterate([&] (...) {count += 1;});
+    return count;
+}
+
 template <typename T> void print_leaf(Tree<T>* t) {
     if (t != nullptr)
         std::cout << "( " + std::to_string(t->info) + " ) -> ";

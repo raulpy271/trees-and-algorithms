@@ -18,6 +18,7 @@ public:
     void set_right(Tree<T>* left);
     void iterate(std::function<void(Tree<T>*, int)> func);
     void delete_tree();
+    size_t count_nodes();
 
 private:
     void iterate_recursive(std::function<void(Tree<T>*, int)> func, Tree<T>* subtree, int* index);
