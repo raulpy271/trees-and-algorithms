@@ -38,6 +38,11 @@ template <typename T> void Tree<T>::iterate(std::function<void(Tree<T>*, int)> f
     iterate_recursive(func, this, &index);
 }
 
+template <typename T> void Tree<T>::iterate_leafs(std::function<void(Tree<T>*, int)> func) {
+    int leaf_index = 0;
+    iterate_recursive_leafs(func, this, &leaf_index);
+}
+
 template <typename T> void Tree<T>::iterate_recursive(
         std::function<void(Tree<T>*, int)> func,
         Tree<T>* subtree,
@@ -48,6 +53,22 @@ template <typename T> void Tree<T>::iterate_recursive(
     *index = (*index) + 1;
     if (subtree->right != nullptr)
         iterate_recursive(func, subtree->right, index);
+}
+
+template <typename T> void Tree<T>::iterate_recursive_leafs(
+        std::function<void(Tree<T>*, int)> func,
+        Tree<T>* subtree,
+        int* leaf_index) {
+    bool leaf = subtree->left == nullptr && subtree->right == nullptr;
+    if (leaf) {
+        func(subtree, *leaf_index);
+        *leaf_index = (*leaf_index) + 1;
+        return;
+    }
+    if (subtree->left != nullptr)
+        iterate_recursive_leafs(func, subtree->left, leaf_index);
+    if (subtree->right != nullptr)
+        iterate_recursive_leafs(func, subtree->right, leaf_index);
 }
 
 template <typename T> size_t Tree<T>::count_nodes() {
@@ -66,13 +87,9 @@ template <typename T> void print_leaf(Tree<T>* t) {
 template <typename T> std::string tree_repr(Tree<T>* t, std::function<std::string(T)> to_str, int current_depth) {
     std::string repr = "";
     for (int i = current_depth; i > 0; i--) {
-        repr += "   ";
+        repr += "    ";
     }
-    if (current_depth % 2 == 0) {
-        repr += "* ";
-    } else {
-        repr += "+ ";
-    }
+    repr += "* ";
     if (t != nullptr) {
         repr += to_str(t->info) + "\n";
         repr += tree_repr(t->left, to_str, current_depth + 1);
