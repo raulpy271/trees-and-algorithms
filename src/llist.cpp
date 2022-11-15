@@ -17,6 +17,19 @@ template <typename T> void LinkedList<T>::delete_list() {
     delete to_delete;
 }
 
+std::string bool_list_to_string(LinkedList<bool>* list) {
+    std::string s = "";
+    while (list != nullptr) {
+        if (list->value) {
+            s += "1";
+        } else {
+            s += "0";
+        }
+        list = list->next;
+    }
+    return s;
+}
+
 template <typename T> void list_insert_start(LinkedList<T>** list, T value) {
     LinkedList<T>* node = new LinkedList<T>(value);
     node->next = (*list);
