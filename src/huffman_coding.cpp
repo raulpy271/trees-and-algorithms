@@ -1,30 +1,30 @@
 
 #include "huffman_coding.h"
 
-template <typename T> Tree<Freq<T>>* create_huffman_tree(T* values, int* frequencies, size_t size) {
-    Tree<Freq<T>>* node = new Tree<Freq<T>>(
-        Freq<T>(values[0], frequencies[0])
+HuffmanTree* create_huffman_tree(char* values, int* frequencies, size_t size) {
+    HuffmanTree* node = new HuffmanTree(
+        Freq<char>(values[0], frequencies[0])
     );
-    AscedingPQueue<Tree<Freq<T>>*>* nodes = new AscedingPQueue<Tree<Freq<T>>*>(node, frequencies[0]);
+    AscedingPQueue<HuffmanTree*>* nodes = new AscedingPQueue<HuffmanTree*>(node, frequencies[0]);
     for (int i = 1; i < size; i++) {
-        node = new Tree<Freq<T>>(
-            Freq<T>(values[i], frequencies[i])
+        node = new HuffmanTree(
+            Freq<char>(values[i], frequencies[i])
         );
-        pq_insert<Tree<Freq<T>>*>(&nodes, node, frequencies[i]);
+        pq_insert<HuffmanTree*>(&nodes, node, frequencies[i]);
     }
-    Tree<Freq<T>>* left_node;
-    Tree<Freq<T>>* right_node;
+    HuffmanTree* left_node;
+    HuffmanTree* right_node;
     int freq;
     while (nodes->count_nodes() > 1) {
-        left_node = pq_pop_min<Tree<Freq<T>>*>(&nodes);
-        right_node = pq_pop_min<Tree<Freq<T>>*>(&nodes);
+        left_node = pq_pop_min<HuffmanTree*>(&nodes);
+        right_node = pq_pop_min<HuffmanTree*>(&nodes);
         freq = left_node->info.freq + right_node->info.freq;
-        node = new Tree<Freq<T>>(Freq<T>((T) NULL, freq));
+        node = new HuffmanTree(Freq<char>('\0', freq));
         node->set_left(left_node);
         node->set_right(right_node);
-        pq_insert<Tree<Freq<T>>*>(&nodes, node, freq);
+        pq_insert<HuffmanTree*>(&nodes, node, freq);
     }
-    node = pq_pop_min<Tree<Freq<T>>*>(&nodes);
+    node = pq_pop_min<HuffmanTree*>(&nodes);
     return node;
 }
 
@@ -64,5 +64,4 @@ void sort_huffman_code(HuffmanTree* tree, HuffmanCodeArray huffman_code, char* o
     delete[] ordered_code;
 }
 
-template class AscedingPQueue<Tree<Freq<char>>*>;
-template Tree<Freq<char>>* create_huffman_tree<char> (char*, int*, size_t);
+template class AscedingPQueue<HuffmanTree*>;

@@ -11,7 +11,7 @@ typedef Tree<Freq<char>> HuffmanTree;
 typedef LinkedList<bool>* HuffmanCode;
 typedef LinkedList<bool>** HuffmanCodeArray;
 
-template <typename T> Tree<Freq<T>>* create_huffman_tree(T* values, int* frequencies, size_t size);
+HuffmanTree* create_huffman_tree(char* values, int* frequencies, size_t size);
 
 HuffmanCodeArray create_huffman_coding(HuffmanTree* tree, size_t leaf_size);
 
