@@ -30,6 +30,14 @@ std::string bool_list_to_string(LinkedList<bool>* list) {
     return s;
 }
 
+template <typename T> void delete_array_of_linked_list(LinkedList<T>** arr, size_t size) {
+    LinkedList<T>* list = nullptr;
+    for (int i = 0; i < size; i++) {
+        list = arr[i];
+        list->delete_list();
+    }
+}
+
 template <typename T> void list_insert_start(LinkedList<T>** list, T value) {
     LinkedList<T>* node = new LinkedList<T>(value);
     node->next = (*list);
@@ -49,5 +57,6 @@ template <typename T> T list_pop_start(LinkedList<T>** list) {
 }
 
 template class LinkedList<bool>;
+template void delete_array_of_linked_list<bool>(LinkedList<bool>** arr, size_t size);
 template void list_insert_start<bool>(LinkedList<bool>**, bool);
 template bool list_pop_start<bool>(LinkedList<bool>**);
