@@ -30,6 +30,13 @@ HuffmanTree* create_huffman_tree(char* values, int* frequencies, size_t size) {
 
 HuffmanCodeArray create_huffman_coding(HuffmanTree* tree, size_t leaf_size) {
     HuffmanCodeArray code_arr = new HuffmanCode[leaf_size];
+    if (tree->is_leaf()) {
+        // If the tree has a single node, we encode it with a constant value, false(zero) in the case.
+        HuffmanCode code = nullptr;
+        list_insert_start<bool>(&code, false);
+        code_arr[0] = code;
+        return code_arr;
+    }
     tree->iterate_leafs([=] (HuffmanTree* leaf, int index) {
         HuffmanCode code = nullptr;
         HuffmanTree* node = leaf;
@@ -73,6 +80,13 @@ std::string decode_text(HuffmanTree* tree, std::string coded_msg) {
     char to_decode;
     HuffmanTree* subtree = tree;
     int i = 0;
+    if (tree->is_leaf()) {
+        // if the tree has a single node, each binary digit represents a char, which is the leaf char.
+        for (; i < size; i++) {
+            decoded += tree->info.value;
+        }
+        return decoded;
+    }
     while (i < size) {
         if (subtree->is_leaf()) {
             decoded += subtree->info.value;
