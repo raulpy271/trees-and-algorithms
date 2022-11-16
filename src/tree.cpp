@@ -1,6 +1,4 @@
 
-#include <iostream>
-
 #include "freq.h"
 #include "tree.h"
 
@@ -78,13 +76,6 @@ template <typename T> size_t Tree<T>::count_nodes() {
     size_t count = 0;
     this->iterate([&] (...) {count += 1;});
     return count;
-}
-
-template <typename T> void print_leaf(Tree<T>* t) {
-    if (t != nullptr)
-        std::cout << "( " + std::to_string(t->info) + " ) -> ";
-    else
-        std::cout << "end" << std::endl;
 }
 
 template <typename T> std::string tree_repr(Tree<T>* t, std::function<std::string(T)> to_str, int current_depth) {

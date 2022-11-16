@@ -2,7 +2,7 @@
 #ifndef PQUEUE_H_
 #define PQUEUE_H_
 
-#include <stddef.h>
+#include <cstddef>
 
 template <typename T> class AscedingPQueue {
 public:

@@ -27,8 +27,6 @@ private:
     void iterate_recursive_leafs(std::function<void(Tree<T>*, int)> func, Tree<T>* subtree, int* leaf_index);
 };
 
-template <typename T> void print_leaf(Tree<T>* t);
-
 template <typename T> std::string tree_repr(Tree<T>* t, std::function<std::string(T)> to_str, int current_depth = 0);
 
 template <typename T> void insert_in_frequency_tree(Tree<Freq<T>>* tree, T value);
