@@ -14,6 +14,7 @@ public:
 
     Tree(T info);
 
+    bool is_leaf();
     void set_left(Tree<T>* left);
     void set_right(Tree<T>* left);
     void iterate(std::function<void(Tree<T>*, int)> func);

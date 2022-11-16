@@ -11,6 +11,10 @@ template <typename T> Tree<T>::Tree(T info) {
     this->info = info;
 }
 
+template <typename T> bool Tree<T>::is_leaf() {
+    return left == nullptr && right == nullptr;
+}
+
 template <typename T> void Tree<T>::delete_tree() {
     if (left != nullptr)
         left->delete_tree();
@@ -59,8 +63,7 @@ template <typename T> void Tree<T>::iterate_recursive_leafs(
         std::function<void(Tree<T>*, int)> func,
         Tree<T>* subtree,
         int* leaf_index) {
-    bool leaf = subtree->left == nullptr && subtree->right == nullptr;
-    if (leaf) {
+    if (subtree->is_leaf()) {
         func(subtree, *leaf_index);
         *leaf_index = (*leaf_index) + 1;
         return;

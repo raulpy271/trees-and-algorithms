@@ -71,12 +71,10 @@ std::string decode_text(HuffmanTree* tree, std::string coded_msg) {
     std:: string decoded = "";
     size_t size = coded_msg.length();
     char to_decode;
-    bool is_leaf;
     HuffmanTree* subtree = tree;
     int i = 0;
     while (i < size) {
-        is_leaf = subtree->left == nullptr && subtree->right == nullptr;
-        if (is_leaf) {
+        if (subtree->is_leaf()) {
             decoded += subtree->info.value;
             subtree = tree;
             continue;
@@ -91,8 +89,7 @@ std::string decode_text(HuffmanTree* tree, std::string coded_msg) {
             i++;
         }
     }
-    is_leaf = subtree->left == nullptr && subtree->right == nullptr;
-    if (is_leaf)
+    if (subtree->is_leaf())
         decoded += subtree->info.value;
     return decoded;
 }
@@ -101,7 +98,6 @@ void sort_huffman_code(HuffmanTree* tree, HuffmanCodeArray huffman_code, char* o
     HuffmanCodeArray ordered_code = new HuffmanCode[size];
     tree->iterate_leafs([=] (HuffmanTree* leaf, int code_index) {
         char char_to_find = leaf->info.value;
-        HuffmanCode temp_code = nullptr;
         for (int new_index = 0; new_index < size; new_index++) {
             if (char_to_find == ordered_char[new_index]) {
                 ordered_code[new_index] = huffman_code[code_index];
