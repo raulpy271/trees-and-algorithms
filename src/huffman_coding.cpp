@@ -46,6 +46,57 @@ HuffmanCodeArray create_huffman_coding(HuffmanTree* tree, size_t leaf_size) {
     return code_arr;
 }
 
+HuffmanCode encode_char(HuffmanCodeArray codes, char to_encode, char* chars, size_t chars_size) {
+    char c;
+    for (int i = 0; i < chars_size; i++) {
+        c = chars[i];
+        if (to_encode == c) {
+            return codes[i];
+        }
+    }
+    return nullptr;
+}
+
+std::string encode_text(HuffmanCodeArray codes, char* text, char* chars, size_t chars_size, size_t text_size) {
+    std::string encoded = "";
+    char to_encode;
+    for (int i = 0; i < text_size; i++) {
+        to_encode = text[i];
+        encoded += bool_list_to_string(encode_char(codes, to_encode, chars, chars_size));
+    }
+    return encoded;
+}
+
+std::string decode_text(HuffmanTree* tree, std::string coded_msg) {
+    std:: string decoded = "";
+    size_t size = coded_msg.length();
+    char to_decode;
+    bool is_leaf;
+    HuffmanTree* subtree = tree;
+    int i = 0;
+    while (i < size) {
+        is_leaf = subtree->left == nullptr && subtree->right == nullptr;
+        if (is_leaf) {
+            decoded += subtree->info.value;
+            subtree = tree;
+            continue;
+        }
+        else {
+            to_decode = coded_msg[i];
+            if (to_decode == '0') {
+                subtree = subtree->left;
+            } else {
+                subtree = subtree->right;
+            }
+            i++;
+        }
+    }
+    is_leaf = subtree->left == nullptr && subtree->right == nullptr;
+    if (is_leaf)
+        decoded += subtree->info.value;
+    return decoded;
+}
+
 void sort_huffman_code(HuffmanTree* tree, HuffmanCodeArray huffman_code, char* ordered_char, size_t size) {
     HuffmanCodeArray ordered_code = new HuffmanCode[size];
     tree->iterate_leafs([=] (HuffmanTree* leaf, int code_index) {

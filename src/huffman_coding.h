@@ -15,6 +15,12 @@ HuffmanTree* create_huffman_tree(char* values, int* frequencies, size_t size);
 
 HuffmanCodeArray create_huffman_coding(HuffmanTree* tree, size_t leaf_size);
 
+HuffmanCode encode_char(HuffmanCodeArray codes, char to_encode, char* chars, size_t chars_size);
+
+std::string encode_text(HuffmanCodeArray codes, char* text, char* chars, size_t chars_size, size_t text_size);
+
+std::string decode_text(HuffmanTree* tree, std::string coded_msg);
+
 void sort_huffman_code(HuffmanTree* tree, HuffmanCodeArray huffman_code, char* ordered_char, size_t size);
 
 #endif // HUFFMAN_CODING_H_
