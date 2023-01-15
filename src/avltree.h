@@ -4,11 +4,7 @@
 
 #include "tree.h"
 
-template <typename T> class AVLTree: public Tree<T> {
-public:
-    AVLTree(T info);
-
-    bool insert(T info);
-};
+template <typename T> bool insert(Tree<T>* tree, T value);
+template <typename T> Tree<T>* insert_without_rebalance(Tree<T>* tree, T info);
 
 #endif // AVLTREE_H_

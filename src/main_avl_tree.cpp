@@ -4,16 +4,17 @@
 #include "avltree.h"
 
 int main () {
-    AVLTree<int> t1(1);
-    AVLTree<int> t2(2);
-    AVLTree<int> t3(3);
+    Tree<int>* t1 = new Tree<int>(1);
 
-    t1.set_left(&t2);
-    t1.set_right(&t3);
+    std::cout << insert(t1, 20)  << std::endl;
+    std::cout << insert(t1, 10)  << std::endl;
+    std::cout << insert(t1, 10)  << std::endl;
+    std::cout << insert(t1, -1)  << std::endl;
 
-    t1.iterate_leafs([=] (Tree<int>* node, int index) {
-        std::cout << "info: " << node->info << std::endl;
+    t1->iterate([=] (Tree<int>* node, int index) {
+        std::cout << node->info << " ";
     });
 
+    t1->delete_tree();
     return 0;
 }
