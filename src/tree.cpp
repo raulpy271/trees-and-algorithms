@@ -1,5 +1,4 @@
 
-#include "freq.h"
 #include "tree.h"
 
 template <typename T> Tree<T>::Tree(T info) {
@@ -150,3 +149,4 @@ template std::string tree_repr<Freq<char>> (Tree<Freq<char>>*, std::function<std
 template void insert_in_frequency_tree<char> (Tree<Freq<char>>*, char);
 template Tree<Freq<char>>* create_frequency_tree<char> (char*, size_t);
 template void set_values_and_frequencies<char> (Tree<Freq<char>>, char*, int*);
+template class Tree<int>;

@@ -5,6 +5,9 @@
 #include <string>
 #include <functional>
 
+#include "freq.h"
+
+
 template <typename T> class Tree {
 public:
     T info;
