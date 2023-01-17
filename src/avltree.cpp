@@ -51,6 +51,26 @@ template <typename T> void rotate_right_left(Tree<T>** tree) {
     *tree = right_left;
 }
 
+template <typename T> void rotate_left_right(Tree<T>** tree) {
+    Tree<T>* left = (*tree)->left;
+    Tree<T>* left_right = left->right;
+    if (left_right->left != nullptr) {
+        left->set_right(left_right->left);
+    } else {
+        left->right = nullptr;
+    }
+    if (left_right->right != nullptr) {
+        (*tree)->set_left(left_right->right);
+    } else {
+        (*tree)->left = nullptr;
+    }
+    left_right->father = (*tree)->father;
+    left_right->set_left(left);
+    left_right->set_right(*tree);
+    *tree = left_right;
+}
+
+
 template <typename T> Tree<T>* insert_without_rebalance(Tree<T>* tree, T info) {
     Tree<T>* subnode = tree;
     Tree<T>* subnode_father = tree->father;
@@ -80,4 +100,5 @@ template Tree<int>* insert_without_rebalance<int> (Tree<int>*, int);
 template void rotate_left<int> (Tree<int>**);
 template void rotate_right<int> (Tree<int>**);
 template void rotate_right_left<int> (Tree<int>**);
+template void rotate_left_right<int> (Tree<int>**);
 template bool insert<int> (Tree<int>*, int);
