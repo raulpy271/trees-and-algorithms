@@ -4,13 +4,13 @@
 
 template <typename T, unsigned int MinDegree> class BTree {
 public:
-    unsigned int min_degree;
     bool leaf;
-    unsigned int used_children;
+    unsigned int used_keys;
     T keys[2 * MinDegree - 1] = {T()};
     BTree<T, MinDegree>* children[2 * MinDegree] = {nullptr};
 
     BTree();
+    void splitChild(unsigned int child_index);
 };
 
 #endif // BTREE_H_ 
