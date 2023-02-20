@@ -14,3 +14,6 @@ run-huffman-coding: build-cmake
 
 run-avl-tree: build-cmake
 	./$(CMAKE_BUILD)/main_avl_tree
+
+run-btree: build-cmake
+	./$(CMAKE_BUILD)/main_btree
