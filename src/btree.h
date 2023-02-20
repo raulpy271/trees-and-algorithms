@@ -2,6 +2,10 @@
 #ifndef BTREE_H_
 #define BTREE_H_
 
+#include <string>
+#include <functional>
+
+
 template <typename T, unsigned int MinDegree> class BTree {
 public:
     bool leaf;
@@ -11,6 +15,7 @@ public:
 
     BTree();
     void splitChild(unsigned int child_index);
+    std::string tree_repr(std::function<std::string(T)> to_str, unsigned int depth = 0);
 };
 
 #endif // BTREE_H_ 

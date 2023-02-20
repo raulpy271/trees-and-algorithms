@@ -32,4 +32,25 @@ void BTree<T, MinDegree>::splitChild(unsigned int child_index) {
     used_keys++;
 }
 
+template <typename T, unsigned int MinDegree>
+std::string BTree<T, MinDegree>::tree_repr(std::function<std::string(T)> to_str, unsigned int depth) {
+    std::string repr = "";
+    std::string ident = "";
+    for (int i = depth; i > 0; i--) {
+        ident += "    ";
+    }
+    if (leaf) {
+        for (int i = 0; i < used_keys; i++) {
+            repr += (ident + "* " + to_str(keys[i]) + "\n");
+        }
+    } else {
+        for (int i = 0; i < used_keys; i++) {
+            repr += children[i]->tree_repr(to_str, depth + 1);
+            repr += (ident + "* " + to_str(keys[i]) + "\n");
+        }
+        repr += children[used_keys]->tree_repr(to_str, depth + 1);
+    }
+    return repr;
+}
+
 template class BTree<int, 10>;
