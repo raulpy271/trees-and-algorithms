@@ -7,6 +7,20 @@ template <typename T, unsigned int MinDegree> BTree<T, MinDegree>::BTree() {
 }
 
 template <typename T, unsigned int MinDegree>
+bool BTree<T, MinDegree>::search_key(T key) {
+    int i;
+    for (i = 0; (i < used_keys) && key > keys[i]; i++);
+    if ((i < used_keys) && (key == keys[i])) {
+        return true;
+    }
+    if (leaf) {
+        return false;
+    } else {
+        return children[i]->search_key(key);
+    }
+}
+
+template <typename T, unsigned int MinDegree>
 void BTree<T, MinDegree>::split_child(unsigned int child_index) {
     BTree<T, MinDegree>* new_node = new BTree<T, MinDegree>();
     BTree<T, MinDegree>* child = this->children[child_index];

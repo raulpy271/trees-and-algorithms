@@ -17,6 +17,7 @@ public:
     void split_child(unsigned int child_index);
     BTree<T, MinDegree>* insert(T key);
     void insert_in_nonfull(T key);
+    bool search_key(T key);
     std::string tree_repr(std::function<std::string(T)> to_str, unsigned int depth = 0);
 };
 
