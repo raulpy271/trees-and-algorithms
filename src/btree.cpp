@@ -1,5 +1,6 @@
 
 #include "btree.h"
+#include <iostream>
 
 template <typename T, unsigned int MinDegree> BTree<T, MinDegree>::BTree() {
     leaf = true;
@@ -82,6 +83,67 @@ BTree<T, MinDegree>* BTree<T, MinDegree>::insert(T key) {
 }
 
 template <typename T, unsigned int MinDegree>
+BTree<T, MinDegree>* BTree<T, MinDegree>::delete_key(T key) {
+    delete_in_nonmin(key);
+    return this;
+}
+
+template <typename T, unsigned int MinDegree>
+void BTree<T, MinDegree>::delete_in_nonmin(T key) {
+    std::cout << "deleting " << key << std::endl;
+    int i;
+    for (i = 0; (i < used_keys) && key > keys[i]; i++);
+    bool found_key = (i < used_keys) && (key == keys[i]);
+    if (leaf) {
+        if (found_key) {
+            std::cout << "found key in leaf " << i << std::endl;
+            for (; i < (used_keys - 1); i++) {
+                keys[i] = keys[i + 1];
+            } 
+            used_keys--;
+        }
+        return;
+    }
+    if (found_key) {
+        std::cout << "found key in internal node" << std::endl;
+    } else {
+        if (children[i]->has_min_keys()) {
+            if (i == 0) {
+                if (children[i + 1]->has_min_keys()) {
+                    std::cout << "should merge right" << std::endl;
+                    merge_child(i);
+                } else {
+                    move_from_right_to_child(i);
+                }
+            } else {
+                if (i == used_keys) {
+                    if (children[i - 1]->has_min_keys()) {
+                        std::cout << "should merge left" << std::endl;
+                        i--;
+                        merge_child(i);
+                    } else {
+                        move_from_left_to_child(i);
+                    }
+
+                } else {
+                    if (!(children[i + 1]->has_min_keys())) {
+                        move_from_right_to_child(i);
+                    } else {
+                        if (!(children[i - 1]->has_min_keys())) {
+                            move_from_left_to_child(i);
+                        } else {
+                            std::cout << "should merge whathever" << std::endl;
+                            merge_child(i);
+                        }
+                    }
+                }
+            }
+        }
+        children[i]->delete_in_nonmin(key);
+    }
+}
+
+template <typename T, unsigned int MinDegree>
 std::string BTree<T, MinDegree>::tree_repr(std::function<std::string(T)> to_str, unsigned int depth) {
     if (!used_keys) {
         return "empty tree\n";
@@ -103,6 +165,73 @@ std::string BTree<T, MinDegree>::tree_repr(std::function<std::string(T)> to_str,
         repr += children[used_keys]->tree_repr(to_str, depth + 1);
     }
     return repr;
+}
+
+template <typename T, unsigned int MinDegree>
+bool BTree<T, MinDegree>::has_min_keys() {
+    return used_keys == (MinDegree - 1);
+}
+
+template <typename T, unsigned int MinDegree>
+void BTree<T, MinDegree>::move_from_right_to_child(unsigned int child_index) {
+    BTree<T, MinDegree>* child = children[child_index];
+    BTree<T, MinDegree>* right = children[child_index + 1];
+    child->keys[child->used_keys] = keys[child_index];
+    keys[child_index] = right->keys[0];
+    if (!(child->leaf)) {
+        child->children[(child->used_keys) + 1] = right->children[0];
+        for (int i = 1; i <= right->used_keys; i++) {
+            right->children[i - 1] = right->children[i];
+        }
+    }
+    child->used_keys++;
+    for (int i = 1; i < right->used_keys; i++) {
+        right->keys[i - 1] = right->keys[i];
+    }
+    right->used_keys--;
+}
+
+template <typename T, unsigned int MinDegree>
+void BTree<T, MinDegree>::move_from_left_to_child(unsigned int child_index) {
+    BTree<T, MinDegree>* child = children[child_index];
+    BTree<T, MinDegree>* left = children[child_index - 1];
+    for (int i = child->used_keys; i > 0; i--) {
+        child->keys[i] = child->keys[i - 1];
+    }
+    child->keys[0] = keys[child_index - 1];
+    keys[child_index - 1] = left->keys[left->used_keys - 1];
+    if (!(child->leaf)) {
+        for (int i = child->used_keys; i >= 0; i--) {
+            child->children[i + 1] = child->children[i];
+        }
+        child->children[0] = left->children[left->used_keys];
+    }
+    child->used_keys++;
+    left->used_keys--;
+}
+
+template <typename T, unsigned int MinDegree>
+void BTree<T, MinDegree>::merge_child(unsigned int child_index) {
+    BTree<T, MinDegree>* child = children[child_index];
+    BTree<T, MinDegree>* right = children[child_index + 1];
+    child->keys[child->used_keys] = keys[child_index];
+    for (int i = 0; i < right->used_keys; i++) {
+        child->keys[child->used_keys + 1 + i] = right->keys[i];
+    }
+    if (!(child->leaf)) {
+        for (int i = 0; i <= right->used_keys; i++) {
+            child->children[child->used_keys + 1 + i] = right->children[i];
+        }
+    }
+    for (int i = child_index; i < (used_keys - 1); i++) {
+        keys[i] = keys[i + 1];
+    }
+    for (int i = child_index + 1; i < used_keys; i++) {
+        children[i] = children[i + 1];
+    }
+    used_keys--;
+    child->used_keys += right->used_keys + 1;
+    delete right;
 }
 
 template class BTree<int, 10>;

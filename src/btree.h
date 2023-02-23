@@ -14,11 +14,19 @@ public:
     BTree<T, MinDegree>* children[2 * MinDegree] = {nullptr};
 
     BTree();
-    void split_child(unsigned int child_index);
     BTree<T, MinDegree>* insert(T key);
-    void insert_in_nonfull(T key);
+    BTree<T, MinDegree>* delete_key(T key);
     bool search_key(T key);
     std::string tree_repr(std::function<std::string(T)> to_str, unsigned int depth = 0);
+
+private:
+    void insert_in_nonfull(T key);
+    void delete_in_nonmin(T key);
+    void split_child(unsigned int child_index);
+    void move_from_right_to_child(unsigned int child_index);
+    void move_from_left_to_child(unsigned int child_index);
+    void merge_child(unsigned int child_index);
+    bool has_min_keys();
 };
 
 #endif // BTREE_H_ 
