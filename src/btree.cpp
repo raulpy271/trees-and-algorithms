@@ -84,19 +84,22 @@ BTree<T, MinDegree>* BTree<T, MinDegree>::insert(T key) {
 
 template <typename T, unsigned int MinDegree>
 BTree<T, MinDegree>* BTree<T, MinDegree>::delete_key(T key) {
-    delete_in_nonmin(key);
-    return this;
+    if ((used_keys == 1) && children[0]->has_min_keys() && children[1]->has_min_keys()) {
+        std::cout << "O caso onde a raiz possui apenas dois filhos com quantidade mínima de chaves não foi implementado" << std::endl;
+        throw 404;
+    } else {
+        delete_in_nonmin(key);
+        return this;
+    }
 }
 
 template <typename T, unsigned int MinDegree>
 void BTree<T, MinDegree>::delete_in_nonmin(T key) {
-    std::cout << "deleting " << key << std::endl;
     int i;
     for (i = 0; (i < used_keys) && key > keys[i]; i++);
     bool found_key = (i < used_keys) && (key == keys[i]);
     if (leaf) {
         if (found_key) {
-            std::cout << "found key in leaf " << i << std::endl;
             for (; i < (used_keys - 1); i++) {
                 keys[i] = keys[i + 1];
             } 
@@ -105,12 +108,20 @@ void BTree<T, MinDegree>::delete_in_nonmin(T key) {
         return;
     }
     if (found_key) {
-        std::cout << "found key in internal node" << std::endl;
+        if (children[i]->has_min_keys()) {
+            if (children[i + 1]->has_min_keys()) {
+                std::cout << "O caso onde a chave foi encontrada e nó interno e ambos os filhos possuem t - 1 chaves não foi implementado" << std::endl;
+                throw 404;
+            } else {
+                replace_key_from_right(i);
+            }
+        } else {
+            replace_key_from_left(i);
+        }
     } else {
         if (children[i]->has_min_keys()) {
             if (i == 0) {
                 if (children[i + 1]->has_min_keys()) {
-                    std::cout << "should merge right" << std::endl;
                     merge_child(i);
                 } else {
                     move_from_right_to_child(i);
@@ -118,7 +129,6 @@ void BTree<T, MinDegree>::delete_in_nonmin(T key) {
             } else {
                 if (i == used_keys) {
                     if (children[i - 1]->has_min_keys()) {
-                        std::cout << "should merge left" << std::endl;
                         i--;
                         merge_child(i);
                     } else {
@@ -132,7 +142,6 @@ void BTree<T, MinDegree>::delete_in_nonmin(T key) {
                         if (!(children[i - 1]->has_min_keys())) {
                             move_from_left_to_child(i);
                         } else {
-                            std::cout << "should merge whathever" << std::endl;
                             merge_child(i);
                         }
                     }
@@ -208,6 +217,34 @@ void BTree<T, MinDegree>::move_from_left_to_child(unsigned int child_index) {
     }
     child->used_keys++;
     left->used_keys--;
+}
+
+template <typename T, unsigned int MinDegree>
+void BTree<T, MinDegree>::replace_key_from_left(unsigned int key_index) {
+    BTree<T, MinDegree>* child = children[key_index];
+    BTree<T, MinDegree>* child_to_get_key;
+    for (child_to_get_key = child;
+        !(child_to_get_key->leaf);
+        child_to_get_key = child_to_get_key->children[child_to_get_key->used_keys]
+    );
+    T new_key = child_to_get_key->keys[child_to_get_key->used_keys - 1];
+    child_to_get_key->keys[child_to_get_key->used_keys - 1] = keys[key_index];
+    child->delete_in_nonmin(keys[key_index]);
+    keys[key_index] = new_key;
+}
+
+template <typename T, unsigned int MinDegree>
+void BTree<T, MinDegree>::replace_key_from_right(unsigned int key_index) {
+    BTree<T, MinDegree>* child = children[key_index + 1];
+    BTree<T, MinDegree>* child_to_get_key;
+    for (child_to_get_key = child;
+        !(child_to_get_key->leaf);
+        child_to_get_key = child_to_get_key->children[0]
+    );
+    T new_key = child_to_get_key->keys[0];
+    child_to_get_key->keys[0] = keys[key_index];
+    child->delete_in_nonmin(keys[key_index]);
+    keys[key_index] = new_key;
 }
 
 template <typename T, unsigned int MinDegree>

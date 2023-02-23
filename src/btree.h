@@ -25,6 +25,8 @@ private:
     void split_child(unsigned int child_index);
     void move_from_right_to_child(unsigned int child_index);
     void move_from_left_to_child(unsigned int child_index);
+    void replace_key_from_left(unsigned int key_index);
+    void replace_key_from_right(unsigned int key_index);
     void merge_child(unsigned int child_index);
     bool has_min_keys();
 };
