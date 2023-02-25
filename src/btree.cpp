@@ -1,6 +1,5 @@
 
 #include "btree.h"
-#include <iostream>
 
 template <typename T, unsigned int MinDegree> BTree<T, MinDegree>::BTree() {
     leaf = true;
@@ -84,13 +83,20 @@ BTree<T, MinDegree>* BTree<T, MinDegree>::insert(T key) {
 
 template <typename T, unsigned int MinDegree>
 BTree<T, MinDegree>* BTree<T, MinDegree>::delete_key(T key) {
-    if ((used_keys == 1) && children[0]->has_min_keys() && children[1]->has_min_keys()) {
-        std::cout << "O caso onde a raiz possui apenas dois filhos com quantidade mínima de chaves não foi implementado" << std::endl;
-        throw 404;
+    BTree<T, MinDegree>* root = this;
+    if ((used_keys == 1) && leaf) {
+        if (keys[0] == key) {
+            used_keys--;
+        }
     } else {
-        delete_in_nonmin(key);
-        return this;
+        if ((used_keys == 1) && children[0]->has_min_keys() && children[1]->has_min_keys()) {
+            merge_child(0);
+            root = children[0];
+            delete this;
+        }
+        root->delete_in_nonmin(key);
     }
+    return root;
 }
 
 template <typename T, unsigned int MinDegree>
@@ -110,8 +116,8 @@ void BTree<T, MinDegree>::delete_in_nonmin(T key) {
     if (found_key) {
         if (children[i]->has_min_keys()) {
             if (children[i + 1]->has_min_keys()) {
-                std::cout << "O caso onde a chave foi encontrada e nó interno e ambos os filhos possuem t - 1 chaves não foi implementado" << std::endl;
-                throw 404;
+                merge_child(i);
+                children[i]->delete_in_nonmin(key);
             } else {
                 replace_key_from_right(i);
             }
